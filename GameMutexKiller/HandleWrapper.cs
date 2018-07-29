@@ -8,9 +8,11 @@ using System.Text.RegularExpressions;
 
 namespace GameMutexKiller
 {
-	public static class HandleWrapper
+	public class HandleWrapper : IHandleWrapper
 	{
-		private static string GetHandleExePath()
+		private const string HandleClosedTerm = "Handle closed";
+
+		private string GetHandleExePath()
 		{
 			var currentExePath = Assembly.GetExecutingAssembly().Location;
 			var currentDir = Path.GetDirectoryName(currentExePath);
@@ -18,7 +20,7 @@ namespace GameMutexKiller
 			return handlePath;
 		}
 
-		private static string RunHandleWithArgs(string args)
+		private string RunHandleWithArgs(string args)
 		{
 			var process = new Process
 			{
@@ -40,7 +42,7 @@ namespace GameMutexKiller
 			return err;
 		}
 
-		private static IEnumerable<Mutant> GetMutants(string mutantName)
+		private IEnumerable<Mutant> GetMutants(string mutantName)
 		{
 			var mutantStringResult = RunHandleWithArgs(string.Format("-a \"{0}\"", mutantName));
 
@@ -63,20 +65,27 @@ namespace GameMutexKiller
 			}
 		}
 
-		public static IEnumerable<string> KillLock(string mutantName)
+		public IEnumerable<bool> KillLock(string mutantName)
 		{
 			var mutants = GetMutants(mutantName).ToList();
 			foreach (var mutant in mutants)
 			{
-				yield return KillMutant(mutant);
+				var killMutantResult = KillMutant(mutant);
+				
+				yield return killMutantResult.Contains(HandleClosedTerm);
 			}
 		}
 
-		private static string KillMutant(Mutant mutant)
+		private string KillMutant(Mutant mutant)
 		{
 			var args = string.Format("-p {0} -c {1} -y", mutant.PID, mutant.HEX);
 			var result = RunHandleWithArgs(args);
 			return result;
 		}
+	}
+
+	public interface IHandleWrapper
+	{
+		IEnumerable<bool> KillLock(string mutexName);
 	}
 }
