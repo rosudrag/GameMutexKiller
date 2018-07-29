@@ -5,7 +5,7 @@ This project is an example how to use Sysinternals handle to remove mutant locks
 ## [Built version for download](https://github.com/rosudrag/GameMutexKiller/files/2239009/GameMutexKiller.zip)
 
 ## How to use:
-- accept Sysinternal's EULA(read troubleshooting)
+- accept Sysinternal's EULA(read troubleshooting) - only needed once per computer.
 - start the GameMutexKiller.exe and go on with your medieval multiboxing.
 
 ## Troubleshooting:
