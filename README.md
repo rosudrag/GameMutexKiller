@@ -2,7 +2,7 @@
 This project is an example how to use Sysinternals handle to remove mutant locks for games:
 - kills Life is Feudal lock on Launcher and CM Client
 
-## [Built version for download](https://github.com/rosudrag/GameMutexKiller/files/2133945/GameMutexKiller.1_0.zip)
+## [Built version for download](https://github.com/rosudrag/GameMutexKiller/files/2239009/GameMutexKiller.zip)
 
 ## How to use:
 - start LIF Launcher -> launch LIF Game -> run `GameMutexKiller.exe` -> start LIF Launcher ...
