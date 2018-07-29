@@ -6,24 +6,34 @@ namespace GameMutexKiller
 {
 	public class Program
 	{
+		private const string AppNAme = "Game Mutex Lock Killer";
 		private static MutexKiller _mutexKiller;
 		private static readonly ILogging Logger = Logging.Instance;
+		private static WindowsTray _windowsTray;
 
 		public static void Main(string[] args)
 		{
-			AppDomain.CurrentDomain.UnhandledException += (o, e) => HandleException(e);
-			Application.ThreadException += (o, e) => HandleException(e);
+			SetupApplicationExceptionHandling();
 
-			Logger.Info("Game Mutex Lock Killer Activated.");
+			Logger.Info($"Activating {AppNAme} ...");
+			_windowsTray = new WindowsTray("Game Mutex Killer", Logger, CloseApplication);
+			_windowsTray.RunConsoleInBackground(() =>
+			{
+				Logger.Info($"{AppNAme} activated");
+				_mutexKiller = new MutexKiller(Logger);
+				_mutexKiller.StartKilling();
+			});
 
-			var windowsTray = new WindowsTray("Game Mutex Killer", Logger, CloseApplication);
-			windowsTray.RunConsoleInBackground();
-
-			_mutexKiller = new MutexKiller();
-			_mutexKiller.StartKilling();
+			
 
 			Console.ReadLine();
 			CloseApplication();
+		}
+
+		private static void SetupApplicationExceptionHandling()
+		{
+			AppDomain.CurrentDomain.UnhandledException += (o, e) => HandleException(e);
+			Application.ThreadException += (o, e) => HandleException(e);
 		}
 
 		private static void HandleException(EventArgs unhandledExceptionEventArgs)

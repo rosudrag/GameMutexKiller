@@ -1,7 +1,9 @@
-﻿namespace GameMutexKiller.WindowsTrayLibrary
+﻿using System;
+
+namespace GameMutexKiller.WindowsTrayLibrary
 {
 	public interface IWindowsTray
 	{
-		void RunConsoleInBackground();
+		void RunConsoleInBackground(Action appFn);
 	}
 }

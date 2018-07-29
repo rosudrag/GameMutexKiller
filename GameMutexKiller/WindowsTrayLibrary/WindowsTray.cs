@@ -11,7 +11,7 @@ namespace GameMutexKiller.WindowsTrayLibrary
 		private readonly Action _closeApplicationFn;
 		private readonly NotifyIcon _tray;
 		private readonly WindowsTrayRef _windowsTrayRef;
-		private const int AppMinimiseTimeInSeconds = 10;
+		private const int AppMinimiseTimeInSeconds = 5;
 
 		private IntPtr ConsoleWindow =>  _windowsTrayRef.GetConsoleWindowRef();
 		private IntPtr SystemMenu => _windowsTrayRef.GetSystemMenuRef(ConsoleWindow, false);
@@ -37,16 +37,12 @@ namespace GameMutexKiller.WindowsTrayLibrary
 			_tray.Click += RestoreWindow;
 		}
 
-		private const uint SC_CLOSE = 0xF060;
-		private const uint MF_ENABLED = 0x00000000;
-		private const uint MF_DISABLED = 0x00000002;
-
 		private void DisableCloseButton()
 		{
-			_windowsTrayRef.EnableMenuItemRef(SystemMenu, SC_CLOSE, MF_ENABLED | MF_DISABLED);
+			_windowsTrayRef.EnableMenuItemRef(SystemMenu, SystemMenuStates.SC_CLOSE, SystemMenuStates.MF_ENABLED | SystemMenuStates.MF_DISABLED);
 		}
 
-		private void RestoreWindow(object sender, EventArgs e)
+		private void RestoreWindow(object sender = null, EventArgs e = null)
 		{
 			_windowsTrayRef.ShowWindowRef(ConsoleWindow, (int)ShowWindowCommands.Restore);
 		}
@@ -86,10 +82,17 @@ namespace GameMutexKiller.WindowsTrayLibrary
 		{
 			_tray.Dispose();
 			Application.Exit();
-			_closeApplicationFn();
+
+			_logger.Info("Closing application...");
+			ShowApplication();
+			Task.Run(() =>
+			{
+				Thread.Sleep(1500);
+				_closeApplicationFn();
+			});
 		}
 
-		public void RunConsoleInBackground()
+		public void RunConsoleInBackground(Action appFn)
 		{
 			DisableCloseButton();
 			SetupMinimize();
@@ -99,11 +102,17 @@ namespace GameMutexKiller.WindowsTrayLibrary
 
 			Task.Run(() =>
 			{
+				appFn();
 				Thread.Sleep(TimeSpan.FromSeconds(AppMinimiseTimeInSeconds));
 				HideConsole();
 			});
 
 			Application.Run();
+		}
+
+		public void ShowApplication()
+		{
+			RestoreWindow();
 		}
 	}
 }

@@ -9,12 +9,13 @@ namespace GameMutexKiller
 	{
 		private readonly IHandleWrapper _handleWrapper;
 		private readonly List<string> _mutexList;
-		private readonly ILogging _logger = Logging.Instance;
+		private readonly ILogging _logger;
 		private const int KillTimeoutInMs = 10000;
 		private bool _keepRunning;
 
-		public MutexKiller()
+		public MutexKiller(ILogging logger)
 		{
+			_logger = logger;
 			_handleWrapper = new HandleWrapper();
 			_mutexList = new List<string>()
 			{
