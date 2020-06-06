@@ -2,7 +2,7 @@
 This project is an example how to use Sysinternals handle to remove mutant locks for games:
 - service that kills Life is Feudal lock on Launcher and Client every 10 seconds.
 
-## [Built version for download](https://github.com/rosudrag/GameMutexKiller/files/2239009/GameMutexKiller.zip)
+## [Click ME! Download](https://github.com/rosudrag/GameMutexKiller/releases/download/1_2/GameMutexKiller.zip)
 
 ## How to use:
 - accept Sysinternal's EULA(read troubleshooting) - only needed once per computer.
