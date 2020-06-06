@@ -19,7 +19,7 @@ namespace GameMutexKiller
 			_handleWrapper = new HandleWrapper();
 			_mutexList = new List<string>()
 			{
-				"Life is Feudal",
+				"Life is Feudal: MMO",
 				"lif client instance"
 			};
 		}

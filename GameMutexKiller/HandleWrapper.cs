@@ -58,8 +58,14 @@ namespace GameMutexKiller
 
 			foreach (var mutantStringLine in mutantStringLines)
 			{
-				var mutantHex = mutantHexRegex.Match(mutantStringLine).Groups[1].Value;
-				var mutantPid = mutantPidRegex.Match(mutantStringLine).Groups[1].Value;
+				var colonSplit = mutantStringLine.Split(':');
+
+
+				var pidSplit = colonSplit[1].Trim().Split(' ');
+				var hexSplit = colonSplit[2].Trim().Split(' ');
+
+				var mutantPid = pidSplit.First();
+				var mutantHex = hexSplit.Last();
 
 				yield return new Mutant() {PID = mutantPid, HEX = mutantHex};
 			}
